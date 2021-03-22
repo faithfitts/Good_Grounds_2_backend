@@ -1,0 +1,2 @@
+DROP DATABASE IF EXISTS "Good_Grounds_2";
+CREATE DATABASE "Good_Grounds_2";
