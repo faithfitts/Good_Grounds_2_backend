@@ -4,6 +4,7 @@ curl "http://localhost:8000/sign-up/" \
   --header "Content-Type: application/json" \
   --data '{
     "credentials": {
+      "username": "'"${USERNAME}"'",
       "email": "'"${EMAIL}"'",
       "password": "'"${PASSWORD}"'",
       "password_confirmation": "'"${PASSWORD}"'"

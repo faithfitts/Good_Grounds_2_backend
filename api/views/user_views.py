@@ -61,6 +61,7 @@ class SignIn(generics.CreateAPIView):
                 return Response({
                     'user': {
                         'id': user.id,
+                        'username': user.username,
                         'email': user.email,
                         'token': user.get_auth_token()
                     }
