@@ -1,13 +1,15 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
+# from .models.comment import Comment
 from .models.recipe import Recipe
 from .models.user import User
+
 
 class RecipeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Recipe
-        fields = ('id', 'title', 'description', 'method', 'ingredients', 'owner')
+        fields = ('id', 'name', 'description', 'method', 'ingredients', 'owner')
 
 class UserSerializer(serializers.ModelSerializer):
     # This model serializer will be used for User creation

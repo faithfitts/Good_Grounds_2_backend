@@ -8,16 +8,13 @@ from django.contrib.auth import get_user, authenticate, login, logout
 from django.middleware.csrf import get_token
 
 from ..models.recipe import Recipe
-from ..serializers import RecipeSerializer, UserSerializer
+from ..serializers import RecipeSerializer
 
-# Create your views here.
 class Recipes(generics.ListCreateAPIView):
     permission_classes=(IsAuthenticated,)
     serializer_class = RecipeSerializer
     def get(self, request):
-        """Index request"""
-        # Get all the recipes:
-        # recipes = Recipe.objects.all()
+        """Index One Request"""
         # Filter the recipes by owner, so you can only see your owned recipes
         recipes = Recipe.objects.filter(owner=request.user.id)
         # Run the data through the serializer
@@ -38,6 +35,18 @@ class Recipes(generics.ListCreateAPIView):
         # If the data is not valid, return a response with the errors
         return Response(recipe.errors, status=status.HTTP_400_BAD_REQUEST)
 
+class AllRecipes(generics.ListCreateAPIView):
+    permission_classes=(IsAuthenticated,)
+    serializer_class = RecipeSerializer
+
+    def get(self, request):
+        """Index All Request"""
+        # Get all users the recipes:
+        recipes = Recipe.objects.all()
+        # Run the data through the serializer
+        data = RecipeSerializer(recipes, many=True).data
+        return Response({ 'recipes': data })
+
 class RecipeDetail(generics.RetrieveUpdateDestroyAPIView):
     permission_classes=(IsAuthenticated,)
     def get(self, request, pk):
@@ -56,7 +65,7 @@ class RecipeDetail(generics.RetrieveUpdateDestroyAPIView):
         """Delete request"""
         # Locate recipe to delete
         recipe = get_object_or_404(Recipe, pk=pk)
-        # Check the recipe's owner agains the user making this request
+        # Check the recipe's owner against the user making this request
         if not request.user.id == recipe.owner.id:
             raise PermissionDenied('Unauthorized, you do not own this recipe')
         # Only delete if the user owns the  recipe
@@ -82,7 +91,7 @@ class RecipeDetail(generics.RetrieveUpdateDestroyAPIView):
         # Add owner to data object now that we know this user owns the resource
         request.data['recipe']['owner'] = request.user.id
         # Validate updates with serializer
-        data = RecipeSerializer(recipe, data=request.data['recipe'])
+        data = RecipeSerializer(recipe, data=request.data['recipe'], partial=True)
         if data.is_valid():
             # Save & send a 204 no content
             data.save()

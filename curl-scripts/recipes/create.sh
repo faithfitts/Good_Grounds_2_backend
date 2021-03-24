@@ -1,6 +1,6 @@
 #!/bin/bash
 
-curl "http://localhost:8000/recipes/${ID}" \
+curl "http://localhost:8000/recipes/" \
   --include \
   --request POST \
   --header "Content-Type: application/json" \
