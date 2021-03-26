@@ -24,6 +24,7 @@ class Recipe(models.Model):
     """Returns dictionary version of Recipe models"""
     return {
         'id': self.id,
+        'name': self.name,
         'description': self.description,
         'method': self.method,
         'ingredients': self.ingredients
